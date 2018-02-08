@@ -7,6 +7,7 @@
 	$id= $_POST['userselect'];
 	$text = h($_POST['changename']);
 	$dbname = h(preg_replace('/(?:\n|\r|\r\n)/', '', file_get_contents('./dbname.txt')));
+	require('sqlsetting.php');
 	
 try{
 	$pdo = new PDO(
