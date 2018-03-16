@@ -18,7 +18,7 @@ try{
 	);
 	$user = $pdo->query('SELECT * FROM user');
 	$table = $pdo->query('SELECT * FROM '.$dbname);
-} catch (PDOException $d) {
+} catch (PDOException $e) {
  header('Content-Type: text/plain; charset=UTF-8', true, 500);
  exit($e->getMessage()); 
 }
