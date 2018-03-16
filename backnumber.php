@@ -18,11 +18,12 @@ try{
 		]
 	);
 	$backnumber = null;
-	if(isset($_POST['backnumber'])){
-		$tablename = h($_POST['backnumber']);
+	if(isset($_POST['month'])){
+		$tablename = h($_POST['month']);
 		$backnumber = $pdo->query('SELECT * FROM '.$tablename);
 	}
 	$user = $pdo->query('SELECT * FROM user');
+	$formlist = $pdo->query('SELECT * FROM backnumber');
 } catch (PDOException $d) {
  header('Content-Type: text/plain; charset=UTF-8', true, 500);
  exit($e->getMessage()); 
@@ -80,13 +81,12 @@ header('Content-Type: text/html; charset=utf-8');
 					<form action="./backnumber.php" method="post">
 						<div class="form-group">
 							<select name="month">
+							<?php
+								while($result = $formlist->fetch(PDO::FETCH_ASSOC)){
+									printf("<option value='%s'>%s</option>", $result['tabelname'], $result['tabelname']);
+								}
+							?>
 							<input type="submit" value="過去の記録をみるぞい">
-						<?php
-							if(isset($backnumber)){
-							while($row = $backnumber->fetch()){
-								printf("<option value='%s'>%s</option>",$row['tabelname'], $row['tabelname']);
-							}}
-						?>
 						</div>
 					</form>
           <div class="table-responsive">
@@ -104,7 +104,7 @@ header('Content-Type: text/html; charset=utf-8');
 									<?php
 										$rows = $user->fetchAll();
 										$i=0;
-										while($row = $table->fetch()){
+										while($row = $backnumber->fetch()){
 											while(1){
 												if($rows[$i]['id'] == $row['id']) break;	
 												$i++;

@@ -28,6 +28,7 @@ try{
 		$stmt->bindValue(':id',$result['id'], PDO::PARAM_INT);
 		$stmt->execute();
 	}
+	$pdo->query("INSERT INTO backnumber VALUES (null, '".$dbname."');");
 	#$search->execute();	
 	#$$value = $search->fetch();
 	
