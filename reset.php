@@ -1,12 +1,11 @@
 <?php
-// 見える人と見えない人を切り替えるphp
-#ini_set('display_errors','stderr');
+  ini_set('display_errors',1);
 	date_default_timezone_set('Asia/Tokyo');
 	function h($str){
 		return htmlspecialchars($str,ENT_QUOTES,'UTF-8');
 	}
 	require('sqlsetting.php');
-	$id= $_POST['visible'];
+	#$id= $_POST['visible'];
 	$dbname = h(preg_replace('/(?:\n|\r|\r\n)/', '', file_get_contents('./dbname.txt')));
 	
 try{
@@ -20,14 +19,21 @@ try{
 		]
 	);
 	$date = date("ym");
-	$newtable= $pdo->query('CREATE coffee'.$date.' id int, coffee int default 0, stick int default 0, extra int default 0, comment varchar(100), foreign key(id references user(id);');
-	file_put_contents("./dbname.txt", 'coffee'.$date)
+	$newdbname = 'coffee'.$date;
+	$newtable= $pdo->query('CREATE table coffee'.$date.' (id int, coffee int default 0, stick int default 0, extra int default 0, comment varchar(100), foreign key(id) references user(id));');
+	file_put_contents("./dbname.txt", $newdbname, LOCK_EX);
+	$userid = $pdo->query('SELECT id FROM user;');
+	while($result = $userid->fetch(PDO::FETCH_ASSOC)) {
+		$stmt = $pdo->prepare('INSERT INTO '.$newdbname.' (id) values (:id);');
+		$stmt->bindValue(':id',$result['id'], PDO::PARAM_INT);
+		$stmt->execute();
+	}
 	#$search->execute();	
 	#$$value = $search->fetch();
 	
 	header('Location: ./index.php');
 	exit;
-} catch (PDOException $d) {
+} catch (PDOException $e) {
  header('Content-Type: text/plain; charset=UTF-8', true, 500);
  exit($e->getMessage()); 
 }
